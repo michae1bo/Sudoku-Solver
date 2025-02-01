@@ -46,7 +46,6 @@ class SudokuSolver {
         }
       }
     }
-    console.log(isValid);
     return isValid;
   }
 
@@ -82,7 +81,6 @@ class SudokuSolver {
           continue;
         } else {
           if (puzzleArray2D[i][column] === value) {
-            console.log("hi")
             isValid = false;
             break;
           }
@@ -158,7 +156,48 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
-    
+    const potentialNumbers = {}
+    const puzzleArray2D = this.construct2DArray(puzzleString);
+
+    if (!puzzleString.includes('.')) {
+      console.log(this.validate(puzzleString))
+      console.log(puzzleString.length);
+      console.log(puzzleString)
+      return puzzleString;
+    }
+
+    for (let x = 0; x < puzzleArray2D[0].length; x++) {
+      for (let y = 0; y < puzzleArray2D.length; y++) {
+        if (puzzleArray2D[y][x] === ".") {
+          potentialNumbers[`${y},${x}`] = []
+          for (let i = 1; i <= 9; i++) {
+            const potentialNumber = i.toString();
+            let isPotentialNumber = true;
+            if(!this.checkRowPlacement(puzzleString, y, x, potentialNumber)) {
+              isPotentialNumber = false;
+            }
+            if(!this.checkColPlacement(puzzleString, y, x, potentialNumber)) {
+              isPotentialNumber = false;
+            }
+            if(!this.checkRegionPlacement(puzzleString, y, x, potentialNumber)) {
+              isPotentialNumber = false;
+            }
+            if (isPotentialNumber) {
+              potentialNumbers[`${y},${x}`].push(potentialNumber );
+            }
+          }
+          if (potentialNumbers[`${y},${x}`].length === 1) {
+            puzzleArray2D[y][x] = potentialNumbers[`${y},${x}`][0];
+          }
+        }
+      }
+    }
+    const newPuzzleArray = [];
+    puzzleArray2D.forEach(row => {
+      newPuzzleArray.push(row.join(""));
+    })
+    const newPuzzleString = newPuzzleArray.join('');
+    return this.solve(newPuzzleString);
   }
 }
 
