@@ -163,6 +163,9 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
+    if (!this.validate(puzzleString).isValid) {
+      return false;
+    }
     const potentialNumbers = {}
     const puzzleArray2D = this.construct2DArray(puzzleString);
 
