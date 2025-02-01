@@ -42,9 +42,7 @@ class SudokuSolver {
             if(!this.checkRegionPlacement(puzzleString, y, x, puzzleArray2D[y][x])) {
               isValid = false;
             }
-            break;
           }
-          break;
         }
       }
     }
