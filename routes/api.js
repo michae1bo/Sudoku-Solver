@@ -46,7 +46,6 @@ module.exports = function (app) {
           if (validation.isValid) {
             const x = coordinate[1] - 1;
             const y = letterToNumberCoordinate(coordinate[0]);
-            console.log()
             if (x >= 0 && x <= 8 && y >= 0 && y <= 8 && coordinate.length === 2) {
               const reasonsForInvalid = [];
               if (!solver.checkRowPlacement(puzzleString, y, x, value)) {
