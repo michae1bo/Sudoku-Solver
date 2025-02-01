@@ -15,17 +15,18 @@ class SudokuSolver {
 
   validate(puzzleString) {
     let isValid = true;
-    const sodokuRegex = /[1-9]|\./
+    const sodokuRegex = /[1-9]|\./;
+    let error = "";
     if (puzzleString.length !== 81) {
       isValid = false;
-      console.error("string is not the right size");
+      error = "Expected puzzle to be 81 characters long";
     } else {
       const puzzleArray = puzzleString.split("");
       puzzleArray.forEach(element => {
         const match = element.match(sodokuRegex);
         if (match === null) {
           isValid = false;
-          console.error(element, "is not a valid character");
+          error = 'Invalid characters in puzzle';
         }
       });
       if (isValid) {
@@ -35,18 +36,24 @@ class SudokuSolver {
           for (let y = 0; y < puzzleArray2D.length; y++) {
             if(!this.checkRowPlacement(puzzleString, y, x, puzzleArray2D[y][x])) {
               isValid = false;
+              error = 'Puzzle cannot be solved';
             }
             if(!this.checkColPlacement(puzzleString, y, x, puzzleArray2D[y][x])) {
               isValid = false;
+              error = 'Puzzle cannot be solved';
             }
             if(!this.checkRegionPlacement(puzzleString, y, x, puzzleArray2D[y][x])) {
               isValid = false;
+              error = 'Puzzle cannot be solved';
             }
           }
         }
       }
     }
-    return isValid;
+    if (!isValid) {
+      return { isValid, error}
+    }
+    return { isValid };
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
@@ -160,9 +167,6 @@ class SudokuSolver {
     const puzzleArray2D = this.construct2DArray(puzzleString);
 
     if (!puzzleString.includes('.')) {
-      console.log(this.validate(puzzleString))
-      console.log(puzzleString.length);
-      console.log(puzzleString)
       return puzzleString;
     }
 
@@ -197,6 +201,9 @@ class SudokuSolver {
       newPuzzleArray.push(row.join(""));
     })
     const newPuzzleString = newPuzzleArray.join('');
+    if (newPuzzleString === puzzleString) {
+      return false;
+    }
     return this.solve(newPuzzleString);
   }
 }
